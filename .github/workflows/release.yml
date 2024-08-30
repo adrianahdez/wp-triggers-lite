@@ -19,7 +19,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install zip
-        run: sudo apt-get install -y zip
+        run: sudo apt-get install -y zip jq
 
       - name: Get short commit hash
         id: get_commit_hash
@@ -35,7 +35,7 @@ jobs:
         id: create_release
         run: |
           echo "Creating release..."
-          response=$(curl -X POST \
+          response=$(curl -s -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"tag_name": "release-${{ env.COMMIT_HASH }}", "name": "release-${{ env.COMMIT_HASH }}", "body": "Release description"}' \
@@ -43,14 +43,21 @@ jobs:
           echo "$response"
           upload_url=$(echo "$response" | jq -r '.upload_url' | sed "s/{?name,label}//")
           echo "UPLOAD_URL=$upload_url" >> $GITHUB_ENV
+          echo "Release created at: $upload_url"
 
       - name: Upload Release Asset
         run: |
           echo "Uploading release asset..."
-          curl -X POST \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Content-Type: application/zip" \
-            --data-binary @releases/release-${{ env.COMMIT_HASH }}.zip \
-            "${{ env.UPLOAD_URL }}?name=release-${{ env.COMMIT_HASH }}.zip"
+          if [ -f releases/release-${{ env.COMMIT_HASH }}.zip ]; then
+            curl -s -X POST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/zip" \
+              --data-binary @releases/release-${{ env.COMMIT_HASH }}.zip \
+              "${{ env.UPLOAD_URL }}?name=release-${{ env.COMMIT_HASH }}.zip"
+            echo "Upload complete."
+          else
+            echo "File releases/release-${{ env.COMMIT_HASH }}.zip not found."
+            exit 1
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
