@@ -30,6 +30,16 @@ jobs:
         with:
           tag_name: release-${{ github.sha }}
           release_name: release-${{ github.sha }}
-          files: releases/release-${{ github.sha }}.zip
+          body: 'Release description'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: releases/release-${{ github.sha }}.zip
+          asset_name: release-${{ github.sha }}.zip
+          asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
