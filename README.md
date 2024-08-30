@@ -1,6 +1,6 @@
 # What's this
 
-This is a copy of WP Triggers Lite from the WordPress repository.
+This is a copy of [WP Triggers Lite](https://wordpress.org/plugins/wp-triggers-lite/) from the WordPress repository.
 
 # Objective
 
