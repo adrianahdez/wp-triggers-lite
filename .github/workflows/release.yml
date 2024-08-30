@@ -24,12 +24,12 @@ jobs:
       - name: Run release script
         run: bash release.sh
 
-      - name: List files in releases directory
+      - name: List release directory
         run: ls -l releases/
 
       - name: Create Release
         id: create_release
-        uses: gh-actions/create-release@v1
+        uses: actions/create-release@v1
         with:
           tag_name: release-${{ github.sha }}
           release_name: release-${{ github.sha }}
@@ -38,7 +38,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Asset
-        uses: gh-actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: releases/release-${{ github.sha }}.zip
