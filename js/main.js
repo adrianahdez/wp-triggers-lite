@@ -35,7 +35,7 @@ jQuery(document).ready(function() {
 	}) ;
 	
 	//---------postbox close/open content--------- 
-	jQuery(".handlediv").live("click", function(){
+	jQuery(".handlediv").on("click", function(){
 		var obj = jQuery(this).parent() ;
 		if(obj.hasClass("closed"))
 			obj.removeClass("closed");

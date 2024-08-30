@@ -1,5 +1,5 @@
 jQuery(document).ready(function() {	
-	jQuery(".wptgg_pass_key").live("keyup", function(event){
+	jQuery(".wptgg_pass_key").on("keyup", function(event){
 		if(event.keyCode == 13){
 			if(!jQuery(".wptgg_pass_key").val())return;
 			var obj = this ;

@@ -16,7 +16,7 @@ jQuery(document).ready(function() {
 		}); 
 	});
 	
-	jQuery(".trigger_set_remove").live("click", function(){
+	jQuery(".trigger_set_remove").on("click", function(){
 		jQuery(this).parent(".trigger_one_set").fadeOut(function(){
 			jQuery(this).remove() ;
 		}) ;
