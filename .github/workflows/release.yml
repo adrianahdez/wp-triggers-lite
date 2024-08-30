@@ -21,6 +21,10 @@ jobs:
       - name: Install zip
         run: sudo apt-get install -y zip
 
+      - name: Get short commit hash
+        id: get_commit_hash
+        run: echo "COMMIT_HASH=$(git rev-parse --short=5 HEAD)" >> $GITHUB_ENV
+
       - name: Run release script
         run: bash release.sh
 
@@ -31,8 +35,8 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: release-${{ github.sha }}
-          release_name: release-${{ github.sha }}
+          tag_name: release-${{ env.COMMIT_HASH }}
+          release_name: release-${{ env.COMMIT_HASH }}
           body: 'Release description'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,8 +45,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: releases/release-${{ github.sha }}.zip
-          asset_name: release-${{ github.sha }}.zip
+          asset_path: releases/release-${{ env.COMMIT_HASH }}.zip
+          asset_name: release-${{ env.COMMIT_HASH }}.zip
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
