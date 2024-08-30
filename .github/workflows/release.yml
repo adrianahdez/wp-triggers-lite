@@ -1,0 +1,35 @@
+name: Create and Publish Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install zip
+        run: sudo apt-get install -y zip
+
+      - name: Run release script
+        run: bash release.sh
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: release-${{ github.sha }}
+          release_name: release-${{ github.sha }}
+          files: releases/release-${{ github.sha }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
