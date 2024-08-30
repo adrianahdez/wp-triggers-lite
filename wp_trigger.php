@@ -5,7 +5,7 @@ Plugin URI: http://www.wptriggers.com/
 Description: The Lite version creates simple trigger boxes to get visitors more involved in your site! Upgrade today for more features like shortcode support, URL redirect, submit button options, stats and more!  <a href="http://www.wptriggers.com/upgrade">Click here to upgrade to WP TRIGGERS PRO</a>
 Author: WP Triggers
 Author URI: http://www.wptriggers.com/
-Version: 2.5.3
+Version: 2.5.3-5dbfb
 
 */
 
@@ -13,7 +13,7 @@ If (! Class_Exists ( 'wpTrigger' )) {
 
 	global $wpdb;
 
-	define( 'WPTGG_VERSION' , '1.0' );
+	define( 'WPTGG_VERSION' , '1.1' );
 
 	define( 'WPTGG_PLUGIN_PATH', str_replace("\\", "/", plugin_dir_path(__FILE__) ) ); //use for include files to other files
 
