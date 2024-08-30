@@ -33,20 +33,24 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: release-${{ env.COMMIT_HASH }}
-          release_name: release-${{ env.COMMIT_HASH }}
-          body: 'Release description'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Creating release..."
+          response=$(curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"tag_name": "release-${{ env.COMMIT_HASH }}", "name": "release-${{ env.COMMIT_HASH }}", "body": "Release description"}' \
+            https://api.github.com/repos/${{ github.repository }}/releases)
+          echo "$response"
+          upload_url=$(echo "$response" | jq -r '.upload_url' | sed "s/{?name,label}//")
+          echo "UPLOAD_URL=$upload_url" >> $GITHUB_ENV
 
       - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: releases/release-${{ env.COMMIT_HASH }}.zip
-          asset_name: release-${{ env.COMMIT_HASH }}.zip
-          asset_content_type: application/zip
+        run: |
+          echo "Uploading release asset..."
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Content-Type: application/zip" \
+            --data-binary @releases/release-${{ env.COMMIT_HASH }}.zip \
+            "${{ env.UPLOAD_URL }}?name=release-${{ env.COMMIT_HASH }}.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
