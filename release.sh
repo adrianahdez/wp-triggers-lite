@@ -4,8 +4,10 @@
 RELEASE_DIR="releases"
 # Get the 5-character commit hash
 COMMIT_HASH=$(git rev-parse --short=5 HEAD)
+# Get the current date and time
+DATE_TIME=$(date +%Y%m%d%H%M%S)
 # Define the zip file name
-ZIP_NAME="release-${COMMIT_HASH}.zip"
+ZIP_NAME="release-${COMMIT_HASH}-${DATE_TIME}.zip"
 
 # Define the release directory and create it if it doesn't exist
 mkdir -p "$RELEASE_DIR"
